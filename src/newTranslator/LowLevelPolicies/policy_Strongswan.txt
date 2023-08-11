@@ -1,0 +1,36 @@
+conn rw-config
+also=rw-base
+right=172.16.252.0/24
+rightdns=8.8.8.8
+leftsubnet=0.0.0.0/0
+leftid=556
+leftcert=mycertificate.pem
+reauth=no
+rekey=yes
+ike=aes192gcm16-aes128gcm16-sha256-ecp256-ecp521,aes192-sha256-modp3072
+esp=aes192gcm16-aes128gcm16-ecp256-modp3072,aes192-sha256-ecp256-modp3072
+leftsendcert=always
+rightca="C=This, O=Is, OU=My, CN=CA"
+
+conn ipsec-ikev2-vpn
+auto=add
+compress=no
+type=tunnel
+keyexchange=ikev2
+fragmentation=yes
+forceencaps=yes
+dpdaction=clear
+dpddelay=300
+rekey=no
+left=%any
+leftid=4567
+leftcert=server.cert.pem
+leftsendcert=always
+leftsubnet=0.0.0.0/0
+right=%any
+rightid=4353
+rightauth=eap-mschapv2
+rightdns=8.8.8.8
+rightsendcert=never
+eap_identity=3423
+

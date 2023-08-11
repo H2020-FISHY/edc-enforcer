@@ -1,0 +1,2 @@
+iptables -j DROP  -d 10.1.1.0/24 -s 12.12.12.12 -m conntrack --ctstate NEW,ESTABLISHED -A FORWARD 
+iptables -j DROP  -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -d 12.12.12.12 -s 10.1.1.0/24 

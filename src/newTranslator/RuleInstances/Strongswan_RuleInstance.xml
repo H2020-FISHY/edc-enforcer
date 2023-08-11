@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy nsfName="Strongswan"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="language_Strongswan.xsd">
+
+    <!-- conn rw-config
+    also=rw-base
+    rightsourceip=172.16.252.0/24
+    # set this to a local DNS server that the clients can reach with their assigned IPs.
+    # Think about routing.
+    rightdns=8.8.8.8
+    leftsubnet=0.0.0.0/0
+    leftid=whatevertheclientusestoconnect
+    leftcert=mycertificate.pem
+    # not possible with asymmetric authentication
+    reauth=no
+    rekey=no
+    # secure cipher suits
+    ike=aes192gcm16-aes128gcm16-ecp256-ecp521
+    esp=aes192gcm16-aes128gcm16
+    leftsendcert=always
+    rightca="C=This, O=Is, OU=My, CN=CA" -->
+
+    <rule id="0">
+        <ruleDescription></ruleDescription>
+        <label>rw-config</label>
+        <alsoConditionCapability>
+            <name>rw-base</name>
+        </alsoConditionCapability>
+        <ipDestinationAddressConditionCapability operator="rangeCIDR">
+            <capabilityIpValue>
+                <rangeCIDR>
+					<address>172.16.252.0</address>
+					<maskCIDR>24</maskCIDR>
+				</rangeCIDR>
+            </capabilityIpValue>
+        </ipDestinationAddressConditionCapability>
+        <destinationDNSConditionCapability>
+            <servers>8.8.8.8</servers>
+        </destinationDNSConditionCapability>
+        <sourceSubnetConditionCapability operator="rangeCIDR">
+            <capabilityIpValue>
+                <rangeCIDR>
+                    <address>0.0.0.0</address>
+                    <maskCIDR>0</maskCIDR>
+                </rangeCIDR>
+            </capabilityIpValue>
+        </sourceSubnetConditionCapability>
+        <sourceIdentityConditionCapability>
+            <idNum>556</idNum>
+        </sourceIdentityConditionCapability>
+        <sourceX509CertificateConditionCapability>
+            <path>mycertificate.pem</path>
+        </sourceX509CertificateConditionCapability>
+        <reauthenticationConditionCapability>
+            <choice>no</choice>
+        </reauthenticationConditionCapability>
+        <rekeyConditionCapability>
+            <choice>yes</choice>
+        </rekeyConditionCapability>
+        <ikeActionCapability operator="proposal">
+            <capabilityValue>
+                <propList>
+                    <!-- aes192gcm16-aes128gcm16-sha256-ecp256-ecp521 -->
+                    <proposal>
+                        <algoEnc>aes192</algoEnc>
+                        <mode>gcm16</mode>
+                        <algoEnc>aes128</algoEnc>
+                        <mode>gcm16</mode>
+                        <algoHash>sha256</algoHash>
+                        <dhgroup>ecp256</dhgroup>
+                        <dhgroup>ecp521</dhgroup>
+                    </proposal>
+                    <!--aes192-sha256-modp3072-->
+                    <proposal> 
+                        <algoEnc>aes192</algoEnc>
+                        <algoHash>sha256</algoHash>
+                        <dhgroup>modp3072</dhgroup>
+                    </proposal>
+                </propList>
+            </capabilityValue>
+        </ikeActionCapability>
+        <ipProtocolTypeConditionCapability>
+            <protocolType>
+                <protocolTypeName>esp</protocolTypeName>
+            </protocolType>
+        </ipProtocolTypeConditionCapability>
+        <aEADActionCapability operator="proposal">
+            <capabilityValue>
+                <propList>
+                    <!-- aes192gcm16-aes128gcm16-ecp256-modp3072 -->
+                    <proposal>
+                        <algoEnc>aes192</algoEnc>
+                        <mode>gcm16</mode>
+                        <algoEnc>aes128</algoEnc>
+                        <mode>gcm16</mode>
+                        <dhgroup>ecp256</dhgroup>
+                        <dhgroup>modp3072</dhgroup>
+                    </proposal>
+                    <!-- aes192-sha256-ecp256-modp3072 -->
+                    <proposal> 
+                        <algoEnc>aes192</algoEnc>
+                        <algoHash>sha256</algoHash>
+                        <dhgroup>ecp256</dhgroup>
+                        <dhgroup>modp3072</dhgroup>
+                    </proposal>
+                </propList>
+            </capabilityValue>
+        </aEADActionCapability>
+        <!-- <dataAuthenticationActionCapability>
+            <authAlgoMode>
+                <algoHash>sha384</algoHash>
+                <mode>hmac</mode>
+            </authAlgoMode>
+        </dataAuthenticationActionCapability> -->
+        <sourceSendCertificateConditionCapability>
+            <choice>always</choice>
+        </sourceSendCertificateConditionCapability>
+        <destinationCertificateAutorityConditionCapability>
+            <name>"C=This, O=Is, OU=My, CN=CA"</name>
+        </destinationCertificateAutorityConditionCapability>
+    </rule>
+
+    <!-- conn ipsec-ikev2-vpn
+      auto=add
+      compress=no
+      type=tunnel  # defines the type of connection, tunnel.
+      keyexchange=ikev2
+      fragmentation=yes
+      forceencaps=yes
+      dpdaction=clear
+      dpddelay=300s
+      rekey=no
+      left=%any
+      leftid=@vpn.example.com    # if using IP, define it without the @ sign
+      leftcert=server.cert.pem  # reads the VPN server cert in /etc/ipsec.d/certs
+      leftsendcert=always
+      leftsubnet=0.0.0.0/0
+      right=%any
+      rightid=example
+      rightauth=eap-mschapv2
+      rightdns=8.8.8.8 DNS to be assigned to clients
+      rightsendcert=never
+      eap_identity=%identity -->
+
+    <rule id="1">
+        <ruleDescription></ruleDescription>
+        <label>ipsec-ikev2-vpn</label>
+        <autoActionCapability>
+            <value>add</value>
+        </autoActionCapability>
+        <compressionActionCapability>
+            <choice>no</choice>
+        </compressionActionCapability>
+        <packetEncapsulationActionCapability>
+            <mode>tunnel</mode>
+        </packetEncapsulationActionCapability>
+        <autoExchangeTypeActionCapability>
+            <type>ikev2</type>
+        </autoExchangeTypeActionCapability>
+        <fragmentationActionCapability>
+            <type>yes</type>
+        </fragmentationActionCapability>
+        <typeOfEncapActionCapability>
+            <forceencaps>yes</forceencaps>
+        </typeOfEncapActionCapability>
+        <dpdActionCapability>
+            <type>clear</type>
+        </dpdActionCapability>
+        <dpdDelayConditionCapability>
+            <time>300</time>
+        </dpdDelayConditionCapability>
+        <rekeyConditionCapability>
+            <choice>no</choice>
+        </rekeyConditionCapability>
+        <ipSourceAddressConditionCapability operator="exactMatch">
+            <capabilityIpValue>
+                <exactMatch>%any</exactMatch>
+            </capabilityIpValue>
+        </ipSourceAddressConditionCapability>
+        <sourceIdentityConditionCapability>
+            <idNum>4567</idNum>
+        </sourceIdentityConditionCapability>
+        <sourceX509CertificateConditionCapability>
+            <path>server.cert.pem</path>
+        </sourceX509CertificateConditionCapability>
+        <sourceSendCertificateConditionCapability>
+            <choice>always</choice>
+        </sourceSendCertificateConditionCapability>
+        <sourceSubnetConditionCapability operator="rangeCIDR">
+            <capabilityIpValue>
+                <rangeCIDR>
+                    <address>0.0.0.0</address>
+                    <maskCIDR>0</maskCIDR>
+                </rangeCIDR>
+            </capabilityIpValue>
+        </sourceSubnetConditionCapability>
+        <ipDestinationAddressConditionCapability operator="exactMatch">
+            <capabilityIpValue>
+                <exactMatch>%any</exactMatch>
+            </capabilityIpValue>
+        </ipDestinationAddressConditionCapability>
+        <destinationIdentityConditionCapability>
+            <idNum>4353</idNum>
+        </destinationIdentityConditionCapability>
+        <destinationAuthActionCapability>
+            <method>eap</method>
+            <eapMethod>mschapv2</eapMethod>
+        </destinationAuthActionCapability>
+        <destinationDNSConditionCapability>
+            <servers>8.8.8.8</servers>
+        </destinationDNSConditionCapability>
+        <destinationSendCertificateConditionCapability>
+            <choice>never</choice>
+        </destinationSendCertificateConditionCapability>
+        <eapIdentityConditionCapability>
+            <idNum>3423</idNum>
+        </eapIdentityConditionCapability>
+    </rule>
+</policy>

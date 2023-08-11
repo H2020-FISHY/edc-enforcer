@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy nsfName="ethereumWebAppAuthz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="language_ethereumWebAppAuthz.xsd">
+
+    
+    <rule id="0">
+        <externalData type="priority">2</externalData>
+        <rejectActionCapability/>
+        <walletIDConditionCapability>
+            <WID>0x38fE4036a3cB5fF2C3f4bF4c5D400f6c57016Dd0</WID>
+        </walletIDConditionCapability>
+    </rule>
+
+    <rule id="1">
+        <externalData type="priority">1</externalData>
+        <rejectActionCapability/>
+        <distributedIDConditionCapability>
+            <DID>CnWZ2pmT6adiW8YEg2znCT</DID>
+        </distributedIDConditionCapability>
+    </rule>
+
+    <defaultActionCapabilitySpec>
+        <acceptActionCapability/>
+	</defaultActionCapabilitySpec>
+</policy>

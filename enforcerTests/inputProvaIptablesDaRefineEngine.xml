@@ -1,0 +1,70 @@
+<policy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="language_IpTables.xml" nsfName="IpTables">
+	<rule id="0">
+		<rejectActionCapability />
+		<ipDestinationAddressConditionCapability operator="rangeCIDR">
+			<capabilityIpValue>
+				<rangeCIDR>
+					<address>10.1.1.0</address>
+					<maskCIDR>24</maskCIDR>
+				</rangeCIDR>
+			</capabilityIpValue>
+		</ipDestinationAddressConditionCapability>
+		<ipSourceAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>12.12.12.12</exactMatch>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<matchActionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>conntrack</exactMatch>
+			</capabilityValue>
+		</matchActionCapability>
+		<connTrackStateConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>NEW</elementValue>
+					<elementValue>ESTABLISHED</elementValue>
+				</union>
+			</capabilityValue>
+		</connTrackStateConditionCapability>
+		<appendRuleActionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>FORWARD</exactMatch>
+			</capabilityValue>
+		</appendRuleActionCapability>
+	</rule>
+	<rule id="1">
+		<rejectActionCapability />
+		<appendRuleActionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>FORWARD</exactMatch>
+			</capabilityValue>
+		</appendRuleActionCapability>
+		<matchActionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>conntrack</exactMatch>
+			</capabilityValue>
+		</matchActionCapability>
+		<connTrackStateConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>ESTABLISHED</elementValue>
+					<elementValue>RELATED</elementValue>
+				</union>
+			</capabilityValue>
+		</connTrackStateConditionCapability>
+		<ipDestinationAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>12.12.12.12</exactMatch>
+			</capabilityIpValue>
+		</ipDestinationAddressConditionCapability>
+		<ipSourceAddressConditionCapability operator="rangeCIDR">
+			<capabilityIpValue>
+				<rangeCIDR>
+					<address>10.1.1.0</address>
+					<maskCIDR>24</maskCIDR>
+				</rangeCIDR>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+	</rule>
+</policy>

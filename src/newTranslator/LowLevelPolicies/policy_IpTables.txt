@@ -1,0 +1,11 @@
+iptables -A OUTPUT -i eth0 -p TCP -s 192.168.1.0 -j DROP 
+iptables -A INPUT -p TCP ! -m multiport --dports 10:20 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT 
+iptables -A INPUT -p TCP -s 192.168.1.0/255.255.255.0 -j DROP 
+iptables -A INPUT -p TCP -s 203.0.113.0/24 -j DROP 
+iptables -A INPUT -p TCP -m iprange --src-range 192.168.1.0-192.168.1.6 -j DROP 
+iptables -A INPUT -p TCP -s 192.168.1.1,192.168.1.2,192.168.1.0/255.255.255.0,192.168.1.0/24 -j DROP 
+iptables -A INPUT -p TCP ! --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT 
+iptables -A INPUT -p TCP -m multiport --dports 10,20,30 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p UDP -m multiport --dports 10,20,30 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p TCP --sport 3128 -s 10.0.0.1 -m connbytes --connbytes 504857:504860 
+iptables -P INPUT -j ACCEPT 

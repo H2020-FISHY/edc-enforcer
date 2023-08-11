@@ -1,0 +1,25 @@
+<!doctype html>
+<title>Upload NSF Catalogue</title>
+<h2>Upload NSF Catalogue (.xml)</h2>
+<form method=post enctype=multipart/form-data>
+    <input type=file name=file>
+    <input name="upload" type=submit value="Upload">
+    <input name="home" type=submit value="Home">
+</form>
+<form method=post enctype=multipart/form-data>
+    <label for="text">NSF for which generate language</label>
+    <input name="nsf" placeholder="NSF">
+    <input name="generate" type=submit value="Generate Language">
+</form>
+<form method=post>
+    <input name="generateAll" type=submit value="Generate All Languages">
+</form>
+
+
+<body>
+    {% for mesg in get_flashed_messages() %}
+    {% autoescape false %}
+    <h3>{{ mesg }}</h3>
+    {% endautoescape %}
+    {% endfor %}
+</body>

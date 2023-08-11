@@ -1,0 +1,35 @@
+<policy nsfName="genericPacketFilter" targetRuleSet="INPUT" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./language_genericPacketFilter.xsd">
+
+
+	<!-- iptables -A OUTPUT -i eth0 -p TCP -s 192.168.1.0 -j DROP  -->
+	<!--
+		Security Capabilities use new operators
+     -->
+	<rule id="0">
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>tcp</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<ipSourceAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>192.168.1.0</exactMatch>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<ipDestinationAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>192.168.1.2</exactMatch>
+			</capabilityIpValue>
+		</ipDestinationAddressConditionCapability>
+		<destinationPortConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>80</exactMatch>
+			</capabilityValue>
+		</destinationPortConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<defaultActionCapabilitySpec>
+		<acceptActionCapability/>
+	</defaultActionCapabilitySpec>
+</policy>

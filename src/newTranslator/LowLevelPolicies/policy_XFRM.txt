@@ -1,0 +1,6 @@
+ip xfrm state delete dst 192.168.1.1 src 192.168.1.2/24 proto esp spi 0x100 enc aes 0x00112233445566778899AABBCCDDEEFF
+ip xfrm state delete dst 192.168.1.1 src 192.168.1.2/24 proto ah spi 0x100 enc aes 0x00112233445566778899AABBCCDDEEFF
+ip xfrm state add src 192.168.1.1 dst 192.168.1.2 proto esp spi 0x00000301 mode tunnel mark 7 auth sha256 0x6351665468576D5A7134743777217A25432A462D4A614E645267556B586E3272 enc aes 0x00112233445566778899AABBCCDDEEFF 
+ip xfrm policy add src 172.16.2.0 dst 172.16.1.0 dir fwd ptype main tmpl src 192.168.2.100 dst 192.168.1.100 proto esp mode tunnel mark 7 mask 0xffffffff 
+ip xfrm state add src 192.168.211.138 dst 192.168.245.130 proto esp spi 0x53fa0fdd mode transport reqid 16386 replay-window 32 auth hmac(sha1) 0x55f01ac07e15e437115dde0aedd18a822ba9f81e enc cbc(aes) 0x6aed4975adf006d65c76f63923a6265b src 0.0.0.0 dst 0.0.0.0 
+ip xfrm policy add dir fwd src 192.168.211.138 dst 192.168.245.130 ptype main action allow priority 2080 tmpl src 192.168.211.138 dst 192.168.245.130 proto esp reqid 16386 mode transport 

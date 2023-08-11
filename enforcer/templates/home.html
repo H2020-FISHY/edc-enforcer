@@ -1,0 +1,29 @@
+<!doctype html>
+<title>Enforcer</title>
+<h2>Enforcer</h2>
+    <form method=post >
+        <input name="converter" type=submit value="Converter">
+        <input name="langGen" type=submit value="Language generator">
+        <input name="translator" type=submit value="Translator">
+    </form>
+
+<ul>
+{%- for item in tree.children recursive %}
+    <li>{{ item.name }}
+    {%- if item.children -%}
+        <ul>{{ loop(item.children) }}</ul>
+    {%- endif %}</li>
+{%- endfor %}
+</ul>
+
+<form method=post >
+    <input name="delconverter" type=submit value="Delete Converter files">
+    <input name="dellangen" type=submit value="Delete Language Generator files">
+    <input name="deltranslator" type=submit value="Delete Translator files">
+</form>
+
+<body>
+    {% for mesg in get_flashed_messages() %}
+    <h3>{{ mesg }}</h3>
+    {% endfor %}
+</body>

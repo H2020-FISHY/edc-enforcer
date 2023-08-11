@@ -1,0 +1,23 @@
+<!doctype html>
+<title>Upload Capability Data Model</title>
+<h2>Upload Capability Data Model (.xmi)</h2>
+<div style="display: flex;">
+    <form method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        <input name="upload" type=submit value=Upload>
+    </form>
+    <form method="post">
+        <input name="generate" type=submit value="Convert to XSD">
+    </form>
+    <form method="post">
+        <input name="home" type=submit value="Home">
+    </form>
+</div>
+
+<body>
+    {% for mesg in get_flashed_messages() %}
+    {% autoescape false %}
+    <h3>{{ mesg }}</h3>
+    {% endautoescape %}
+    {% endfor %}
+</body>

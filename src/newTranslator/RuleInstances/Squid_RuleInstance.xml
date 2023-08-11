@@ -1,0 +1,343 @@
+<policy nsfName="Squid" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="language_Squid.xsd">
+
+
+	<rule id="0">
+		<ipSourceAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>192.168.1.0</exactMatch>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<ipDestinationAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>10.3.3.24</exactMatch>
+			</capabilityIpValue>
+		</ipDestinationAddressConditionCapability>
+		<macConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>AC:C1:21:A2:44:A3</exactMatch>
+			</capabilityValue>
+		</macConditionCapability>
+		<sourceDomainConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>.foo.com</exactMatch>
+			</capabilityValue>
+		</sourceDomainConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+
+	<rule id="1">
+		<destinationPortConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>80</exactMatch>
+			</capabilityValue>
+		</destinationPortConditionCapability>
+		<ipSourceAddressConditionCapability operator="union">
+			<capabilityIpValue>
+				<union>
+					<elementValue>192.168.1.1</elementValue>
+					<elementValue>192.168.1.2</elementValue>
+					<elementRange>
+						<rangeMask>
+							<address>192.168.1.0</address>
+							<mask>255.255.255.0</mask>
+						</rangeMask>
+					</elementRange>
+					<elementRange>
+						<rangeCIDR>
+							<address>192.168.1.0</address>
+							<maskCIDR>24</maskCIDR>
+						</rangeCIDR>
+					</elementRange>
+				</union>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="2">
+		<destinationPortConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>10</elementValue>
+					<elementValue>20</elementValue>
+					<elementValue>30</elementValue>
+				</union>
+			</capabilityValue>
+		</destinationPortConditionCapability>
+		<ipSourceAddressConditionCapability operator="range">
+			<capabilityIpValue>
+				<range>
+					<start>192.168.1.0</start>
+					<end>192.168.1.6</end>
+				</range>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<sourceDomainConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>www..*facebook?.com</exactMatch>
+			</capabilityValue>
+		</sourceDomainConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="3">
+		<ipSourceAddressConditionCapability operator="rangeCIDR">
+			<capabilityIpValue>
+				<rangeCIDR>
+					<address>203.0.113.0</address>
+					<maskCIDR>24</maskCIDR>
+				</rangeCIDR>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<ipLocalAddressConditionCapability operator="rangeCIDR">
+			<capabilityIpValue>
+				<rangeCIDR>
+					<address>198.0.113.0</address>
+					<maskCIDR>24</maskCIDR>
+				</rangeCIDR>
+			</capabilityIpValue>
+		</ipLocalAddressConditionCapability>
+		<sourceDomainConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>.foo.com</elementValue>
+					<elementValue>google.com</elementValue>
+					<elementValue>www.facebook.com</elementValue>
+				</union>
+			</capabilityValue>
+		</sourceDomainConditionCapability>
+		<timeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>A</exactMatch>
+			</capabilityValue>
+		</timeConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="4">
+		<destinationASConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>10</elementValue>
+					<elementValue>20</elementValue>
+					<elementValue>30</elementValue>
+				</union>
+			</capabilityValue>
+		</destinationASConditionCapability>
+		<cacheNameConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>mypeercache</exactMatch>
+			</capabilityValue>
+		</cacheNameConditionCapability>
+		<timeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>12:28-13:17</exactMatch>
+			</capabilityValue>
+		</timeConditionCapability>
+		<urlRegexConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>^http://www\..*\.com$</exactMatch>
+			</capabilityValue>
+		</urlRegexConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="5">
+		<sourceASConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>80</exactMatch>
+			</capabilityValue>
+		</sourceASConditionCapability>
+		<timeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>S\b00:28-02:38</exactMatch>
+			</capabilityValue>
+		</timeConditionCapability>
+		<urlPathRegexConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>\.gif$</exactMatch>
+			</capabilityValue>
+		</urlPathRegexConditionCapability>
+		<localPortConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>90</exactMatch>
+			</capabilityValue>
+		</localPortConditionCapability>
+		<portNameConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>myport0</exactMatch>
+			</capabilityValue>
+		</portNameConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="6">
+		<timeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>S\b00:28-02:38</exactMatch>
+			</capabilityValue>
+		</timeConditionCapability>
+		<portNameConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>myport0</exactMatch>
+			</capabilityValue>
+		</portNameConditionCapability>
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>HTTP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<httpMethodConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>DELETE</exactMatch>
+			</capabilityValue>
+		</httpMethodConditionCapability>
+		<httpStatusConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>200</exactMatch>
+			</capabilityValue>
+		</httpStatusConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="7">
+		<portNameConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>myport0</exactMatch>
+			</capabilityValue>
+		</portNameConditionCapability>
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>HTTP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<httpBrowserConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>chrome</exactMatch>
+			</capabilityValue>
+		</httpBrowserConditionCapability>
+		<httpRefererConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>referer.*9</exactMatch>
+			</capabilityValue>
+		</httpRefererConditionCapability>
+		<httpUsernameConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>uname9</exactMatch>
+			</capabilityValue>
+		</httpUsernameConditionCapability>
+		<httpProxyAuthConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>uname.*9\_pass.*</exactMatch>
+			</capabilityValue>
+		</httpProxyAuthConditionCapability>
+		<httpSmnpConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>uname9_pass9</exactMatch>
+			</capabilityValue>
+		</httpSmnpConditionCapability>
+		<numberConnectionsConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>3</exactMatch>
+			</capabilityValue>
+		</numberConnectionsConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="8">
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>HTTP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<httpUsernameConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>uname[o]?9</exactMatch>
+			</capabilityValue>
+		</httpUsernameConditionCapability>
+		<httpProxyAuthConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>uname9_pass</exactMatch>
+			</capabilityValue>
+		</httpProxyAuthConditionCapability>
+		<numberConnectionsConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>4</exactMatch>
+			</capabilityValue>
+		</numberConnectionsConditionCapability>
+		<ipMaxConnectionConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>2</exactMatch>
+			</capabilityValue>
+		</ipMaxConnectionConditionCapability>
+		<httpReqMimeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>popo_mime</exactMatch>
+			</capabilityValue>
+		</httpReqMimeConditionCapability>
+		<httpReqHdrConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>hdr.*</exactMatch>
+			</capabilityValue>
+		</httpReqHdrConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="9">
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>HTTP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<httpRespMimeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>mime.*?</exactMatch>
+			</capabilityValue>
+		</httpRespMimeConditionCapability>
+		<httpRespHdrConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>hdr</exactMatch>
+			</capabilityValue>
+		</httpRespHdrConditionCapability>
+		<certificateAutorityConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>C\bThis</elementValue>
+					<elementValue>O\bIs</elementValue>
+					<elementValue>OU\bMy</elementValue>
+					<elementValue>CN\bCA</elementValue>
+				</union>
+			</capabilityValue>
+        </certificateAutorityConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<rule id="10">
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>HTTP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<httpRespHdrConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>hdr</exactMatch>
+			</capabilityValue>
+		</httpRespHdrConditionCapability>
+		<userSSLCertificateConditionCapability operator="exactMatch">
+			<capabilityValue>
+					<exactMatch>C\bC_01</exactMatch>
+			</capabilityValue>
+        </userSSLCertificateConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<defaultActionCapabilitySpec>
+		<acceptActionCapability operator="exactMatch">
+			<capabilityValue>
+					<exactMatch>all</exactMatch>
+			</capabilityValue>
+		</acceptActionCapability>
+	</defaultActionCapabilitySpec>
+</policy>
+    

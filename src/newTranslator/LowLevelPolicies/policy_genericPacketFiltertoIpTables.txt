@@ -1,0 +1,2 @@
+iptables -A INPUT -p tcp -s 192.168.1.0 -d 192.168.1.2 --dport 80 -j DROP 
+iptables -P INPUT -j ACCEPT 

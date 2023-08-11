@@ -1,0 +1,3 @@
+ python3 testConverter.py ../src/newConverter/definitivo.xmi
+ python3 testLanguage.py
+ python3 testTranslator.py ../src/newTranslator/RuleInstances/IpTables_RuleInstance.xml

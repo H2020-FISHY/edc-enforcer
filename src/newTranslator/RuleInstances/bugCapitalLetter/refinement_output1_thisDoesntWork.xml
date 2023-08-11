@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<policy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="language_IpTables.xml" nsfName="IpTables">
+	<rule id="0">
+		<RejectActionCapability/>
+		<AppendRuleActionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>FORWARD</exactMatch>
+			</capabilityValue>
+		</AppendRuleActionCapability>
+		<IpDestinationAddressConditionCapability operator="rangeCIDR">
+			<capabilityIpValue>
+				<rangeCIDR>
+					<address>10.1.1.0</address>
+					<maskCIDR>24</maskCIDR>
+				</rangeCIDR>
+			</capabilityIpValue>
+		</IpDestinationAddressConditionCapability>
+		<IpSourceAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>43.234.233.2</exactMatch>
+			</capabilityIpValue>
+		</IpSourceAddressConditionCapability>
+	</rule>
+	<rule id="1">
+		<RejectActionCapability/>
+		<AppendRuleActionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>FORWARD</exactMatch>
+			</capabilityValue>
+		</AppendRuleActionCapability>
+		<IpSourceAddressConditionCapability operator="rangeCIDR">
+			<capabilityIpValue>
+				<rangeCIDR>
+					<address>10.1.1.0</address>
+					<maskCIDR>24</maskCIDR>
+				</rangeCIDR>
+			</capabilityIpValue>
+		</IpSourceAddressConditionCapability>
+		<IpDestinationAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>43.234.233.2</exactMatch>
+			</capabilityIpValue>
+		</IpDestinationAddressConditionCapability>
+	</rule>
+</policy>

@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="policy" type="Policy"/>
+    <xs:complexType name="Policy">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="rule" type="Rule"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="defaultActionCapabilitySpec" type="DefaultActionCapability"/>
+        </xs:sequence>
+        <xs:attribute name="nsfName" type="xs:string"/>
+        <xs:attribute name="targetRuleSet" type="xs:string"/>
+        <xs:attribute name="ipSecAction" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="DefaultActionCapabilitySpec">
+        <xs:complexContent>
+            <xs:extension base="DefaultActionCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ResolutionStrategyCapabilitySpec">
+        <xs:complexContent>
+            <xs:extension base="ResolutionStrategyCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AcceptActionCapability">
+        <xs:complexContent>
+            <xs:extension base="AcceptCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="RejectActionCapability">
+        <xs:complexContent>
+            <xs:extension base="RejectCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="WalletIDConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="WalletIDCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DistributedIDConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="DistributedIDCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Rule">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="ruleDescription" type="xs:string"/>
+            <xs:element name="label" type="xs:string"/>
+            <xs:element name="externalData" type="ExternalData"/>
+            <xs:element name="defaultActionCapabilitySpec" type="DefaultActionCapabilitySpec"/>
+            <xs:element name="resolutionStrategyCapabilitySpec" type="ResolutionStrategyCapabilitySpec"/>
+            <xs:element name="acceptActionCapability" type="AcceptActionCapability"/>
+            <xs:element name="rejectActionCapability" type="RejectActionCapability"/>
+            <xs:element name="walletIDConditionCapability" type="WalletIDConditionCapability"/>
+            <xs:element name="distributedIDConditionCapability" type="DistributedIDConditionCapability"/>
+        </xs:choice>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="ruleType" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="ExternalData">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="NSF">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" minOccurs="0" name="languageModelGenerator" type="LanguageModelGenerator"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="nsfTranslatorAdapter" type="NSFTranslatorAdapter"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="metadata" type="Metadata"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="securityCapability" type="SecurityCapability"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="nsfPolicyDetails" type="NSFPolicyDetails"/>
+        </xs:choice>
+        <xs:attribute name="id" type="xs:ID"/>
+        <xs:attribute name="ref" type="xs:IDREF"/>
+    </xs:complexType>
+    <xs:complexType name="SecurityCapability">
+        <xs:complexContent>
+            <xs:extension base="NSF"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DefaultActionCapability">
+        <xs:complexContent>
+            <xs:extension base="SecurityCapability">
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element name="resolutionStrategyCapabilitySpec" type="ResolutionStrategyCapabilitySpec"/>
+                    <xs:element name="acceptActionCapability" type="AcceptActionCapability"/>
+                    <xs:element name="rejectActionCapability" type="RejectActionCapability"/>
+                    <xs:element name="walletIDConditionCapability" type="WalletIDConditionCapability"/>
+                    <xs:element name="distributedIDConditionCapability" type="DistributedIDConditionCapability"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ResolutionStrategyCapability">
+        <xs:complexContent>
+            <xs:extension base="SecurityCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="resolutionStrategy" type="ResolutionStrategyEnumeration"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ActionCapability">
+        <xs:complexContent>
+            <xs:extension base="SecurityCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element maxOccurs="1" minOccurs="0" name="operation" type="OperationTypeEnumeration"/>
+                    <xs:element name="capabilityValue" type="ActionOperatorType"/>
+                </xs:choice>
+                <xs:attribute name="operator" type="SupportedActionOperatorEnumeration"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AcceptCapability">
+        <xs:complexContent>
+            <xs:extension base="ActionCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="RejectCapability">
+        <xs:complexContent>
+            <xs:extension base="ActionCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="SecurityCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element maxOccurs="1" minOccurs="0" name="operation" type="OperationTypeEnumeration"/>
+                    <xs:element name="capabilityValue" type="OperatorType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="capabilityIpValue" type="IpOperatorType"/>
+                </xs:choice>
+                <xs:attribute name="operator" type="SupportedConditionOperatorEnumeration"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="WalletIDCapability">
+        <xs:complexContent>
+            <xs:extension base="ConditionCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element default="^0x[A-Fa-f0-9]{40}$" maxOccurs="1" minOccurs="0" name="WID" type="xs:string"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DistributedIDCapability">
+        <xs:complexContent>
+            <xs:extension base="ConditionCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element default="^[A-Za-z0-9]{22}$" maxOccurs="1" minOccurs="0" name="DID" type="xs:string"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NSFTranslatorAdapter"/>
+    <xs:complexType name="LanguageModelGenerator"/>
+    <xs:complexType name="Metadata"/>
+    <xs:complexType name="NSFPolicyDetails">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" name="ruleStart" type="xs:string"/>
+            <xs:element maxOccurs="1" name="ruleEnd" type="xs:string"/>
+            <xs:element maxOccurs="1" name="policyTrailer" type="xs:string"/>
+            <xs:element maxOccurs="1" name="policyEncoding" type="xs:string"/>
+            <xs:element name="policyAttribute" type="PolicyAttributeType"/>
+            <xs:element maxOccurs="1" name="defaultSecurityCapability" type="xs:string"/>
+            <xs:element name="ruleAttribute" type="RuleAttributeType"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="ruleAttributeDetails" type="RuleAttributeDetailsType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="IpOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="range" type="RangeOperatorType"/>
+            <xs:element name="rangeMask" type="Ipv4MaskRangeOperatorType"/>
+            <xs:element name="rangeCIDR" type="Ipv4MaskCIDRRangeOperatorType"/>
+            <xs:element name="union" type="UnionOperatorType"/>
+            <xs:element default="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" maxOccurs="1" name="exactMatch" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="OperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="range" type="RangeOperatorType"/>
+            <xs:element name="union" type="UnionOperatorType"/>
+            <xs:element maxOccurs="1" name="exactMatch" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="UnionOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="elementRange" type="ElementRangeType"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="elementValue" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="RangeOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" minOccurs="0" name="start" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="end" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ElementRangeType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="range" type="RangeOperatorType"/>
+            <xs:element name="rangeMask" type="Ipv4MaskRangeOperatorType"/>
+            <xs:element name="rangeCIDR" type="Ipv4MaskCIDRRangeOperatorType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="Ipv4MaskCIDRRangeOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element default="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" maxOccurs="1" name="address" type="xs:string"/>
+            <xs:element default="^([0-9]|[1-2][0-9]|3[0-2])?$" maxOccurs="1" minOccurs="0" name="maskCIDR" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="Ipv4MaskRangeOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element default="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" maxOccurs="1" name="address" type="xs:string"/>
+            <xs:element default="^(((255\.){3}(255|254|252|248|240|224|192|128|0+))|((255\.){2}(255|254|252|248|240|224|192|128|0+)\.0)|((255\.)(255|254|252|248|240|224|192|128|0+)(\.0+){2})|((255|254|252|248|240|224|192|128|0+)(\.0+){3}))$" maxOccurs="1" minOccurs="0" name="mask" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="PolicyAttributeType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="attributeName" type="PolicyAttributeEnumeration"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ActionOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="propList" type="ProposalOperatorType"/>
+            <xs:element maxOccurs="1" name="exactMatch" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ProposalOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="proposal" type="CipherSuitesType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="CipherSuitesType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" minOccurs="0" name="algoEnc" type="EncryptionAlgoEnumeration"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="mode" type="ModeForAEADEnumeration"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="algoHash" type="HashAlgorithmEnumeration"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="dhgroup" type="DiffieHellmanEnumeration"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="RuleAttributeType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="attributeName" type="RuleAttributeEnumeration"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="RuleAttributeDetailsType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="mappingDetails" type="MappingDetailsType"/>
+        </xs:choice>
+        <xs:attribute name="ref" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="MappingDetailsType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" name="key" type="xs:string"/>
+            <xs:element maxOccurs="1" name="value" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:simpleType name="ProtocolTypeEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HOPOPT"/>
+            <xs:enumeration value="ICMP"/>
+            <xs:enumeration value="IGMP"/>
+            <xs:enumeration value="GGP"/>
+            <xs:enumeration value="ST"/>
+            <xs:enumeration value="TCP"/>
+            <xs:enumeration value="EGP"/>
+            <xs:enumeration value="IGP"/>
+            <xs:enumeration value="PUP"/>
+            <xs:enumeration value="UDP"/>
+            <xs:enumeration value="HMP"/>
+            <xs:enumeration value="XNS-IDP"/>
+            <xs:enumeration value="RDP"/>
+            <xs:enumeration value="ISO-TP4"/>
+            <xs:enumeration value="DCCP"/>
+            <xs:enumeration value="XTP"/>
+            <xs:enumeration value="DDP"/>
+            <xs:enumeration value="IDPR-CMTP"/>
+            <xs:enumeration value="IPv6"/>
+            <xs:enumeration value="IPv6-Route"/>
+            <xs:enumeration value="IPv6-Frag"/>
+            <xs:enumeration value="IDRP"/>
+            <xs:enumeration value="RSVP"/>
+            <xs:enumeration value="GRE"/>
+            <xs:enumeration value="SKIP"/>
+            <xs:enumeration value="IPv6-ICMP"/>
+            <xs:enumeration value="IPv6-NoNxt"/>
+            <xs:enumeration value="IPv6-Opts"/>
+            <xs:enumeration value="CPHB"/>
+            <xs:enumeration value="VMTP"/>
+            <xs:enumeration value="EIGRP"/>
+            <xs:enumeration value="AX.25"/>
+            <xs:enumeration value="ETHERIP"/>
+            <xs:enumeration value="ENCAP"/>
+            <xs:enumeration value="PIM"/>
+            <xs:enumeration value="VRRP"/>
+            <xs:enumeration value="L2TP"/>
+            <xs:enumeration value="SCTP"/>
+            <xs:enumeration value="FC"/>
+            <xs:enumeration value="UDPLite"/>
+            <xs:enumeration value="MPLS-in-IP"/>
+            <xs:enumeration value="HIP"/>
+            <xs:enumeration value="Shim6"/>
+            <xs:enumeration value="WESP"/>
+            <xs:enumeration value="ROHC"/>
+            <xs:enumeration value="hopopt"/>
+            <xs:enumeration value="icmp"/>
+            <xs:enumeration value="igmp"/>
+            <xs:enumeration value="ggp"/>
+            <xs:enumeration value="ip-encap"/>
+            <xs:enumeration value="st"/>
+            <xs:enumeration value="tcp"/>
+            <xs:enumeration value="egp"/>
+            <xs:enumeration value="igp"/>
+            <xs:enumeration value="pup"/>
+            <xs:enumeration value="udp"/>
+            <xs:enumeration value="hmp"/>
+            <xs:enumeration value="xns-idp"/>
+            <xs:enumeration value="rdp"/>
+            <xs:enumeration value="iso-tp4"/>
+            <xs:enumeration value="dccp"/>
+            <xs:enumeration value="xtp"/>
+            <xs:enumeration value="ddp"/>
+            <xs:enumeration value="idpr-cmtp"/>
+            <xs:enumeration value="ipv6"/>
+            <xs:enumeration value="ipv6-route"/>
+            <xs:enumeration value="ipv6-frag"/>
+            <xs:enumeration value="idrp"/>
+            <xs:enumeration value="rsvp"/>
+            <xs:enumeration value="gre"/>
+            <xs:enumeration value="ipsec-esp"/>
+            <xs:enumeration value="ipsec-ah"/>
+            <xs:enumeration value="skip"/>
+            <xs:enumeration value="ipv6-icmp"/>
+            <xs:enumeration value="ipv6-nonxt"/>
+            <xs:enumeration value="ipv6-opts"/>
+            <xs:enumeration value="rspf"/>
+            <xs:enumeration value="cphb"/>
+            <xs:enumeration value="vmtp"/>
+            <xs:enumeration value="eigrp"/>
+            <xs:enumeration value="ospfigp"/>
+            <xs:enumeration value="ax.25"/>
+            <xs:enumeration value="ipip"/>
+            <xs:enumeration value="etherip"/>
+            <xs:enumeration value="encap"/>
+            <xs:enumeration value="pim"/>
+            <xs:enumeration value="ipcomp"/>
+            <xs:enumeration value="vrrp"/>
+            <xs:enumeration value="l2tp"/>
+            <xs:enumeration value="isis"/>
+            <xs:enumeration value="sctp"/>
+            <xs:enumeration value="fc"/>
+            <xs:enumeration value="mh"/>
+            <xs:enumeration value="MH"/>
+            <xs:enumeration value="udplite"/>
+            <xs:enumeration value="mpls-in-ip"/>
+            <xs:enumeration value="hip"/>
+            <xs:enumeration value="shim6"/>
+            <xs:enumeration value="wesp"/>
+            <xs:enumeration value="rohc"/>
+            <xs:enumeration value="esp"/>
+            <xs:enumeration value="ah"/>
+            <xs:enumeration value="comp"/>
+            <xs:enumeration value="IP-ENCAP"/>
+            <xs:enumeration value="IPSEC-ESP"/>
+            <xs:enumeration value="IPSEC-AH"/>
+            <xs:enumeration value="RSPF"/>
+            <xs:enumeration value="OSPFIGP"/>
+            <xs:enumeration value="IPIP"/>
+            <xs:enumeration value="IPCOMP"/>
+            <xs:enumeration value="ISIS"/>
+            <xs:enumeration value="Mobility-Header"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CpuConditionCapabilityIntegerRestriction">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="7"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="DiffieHellmanEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="modp2048"/>
+            <xs:enumeration value="modp3072"/>
+            <xs:enumeration value="modp4096"/>
+            <xs:enumeration value="modp6144"/>
+            <xs:enumeration value="modp8192"/>
+            <xs:enumeration value="ecp224"/>
+            <xs:enumeration value="ecp256"/>
+            <xs:enumeration value="ecp384"/>
+            <xs:enumeration value="ecp521"/>
+            <xs:enumeration value="ecp224bp"/>
+            <xs:enumeration value="ecp256bp"/>
+            <xs:enumeration value="ecp384bp"/>
+            <xs:enumeration value="ecp512bp"/>
+            <xs:enumeration value="curve25519"/>
+            <xs:enumeration value="x25519"/>
+            <xs:enumeration value="curve448"/>
+            <xs:enumeration value="x448"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="EncryptionAlgoEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="aes128"/>
+            <xs:enumeration value="aes192"/>
+            <xs:enumeration value="aes256"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="HashAlgorithmEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="sha1"/>
+            <xs:enumeration value="sha256"/>
+            <xs:enumeration value="sha384"/>
+            <xs:enumeration value="sha512"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ModeForAEADEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ccm8"/>
+            <xs:enumeration value="ccm12"/>
+            <xs:enumeration value="ccm16"/>
+            <xs:enumeration value="ccm64"/>
+            <xs:enumeration value="ccm96"/>
+            <xs:enumeration value="ccm128"/>
+            <xs:enumeration value="gcm8"/>
+            <xs:enumeration value="gcm12"/>
+            <xs:enumeration value="gcm16"/>
+            <xs:enumeration value="gcm64"/>
+            <xs:enumeration value="gcm96"/>
+            <xs:enumeration value="gcm128"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="OperationTypeEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="UNKNOWN"/>
+            <xs:enumeration value="GREATER_THAN"/>
+            <xs:enumeration value="GREATER_THAN_OR_EQUAL_TO"/>
+            <xs:enumeration value="LESS_THAN"/>
+            <xs:enumeration value="LESS_THAN_OR_EQUAL_TO"/>
+            <xs:enumeration value="EQUAL_TO"/>
+            <xs:enumeration value="NOT_EQUAL_TO"/>
+            <xs:enumeration value="IN"/>
+            <xs:enumeration value="NOT_IN"/>
+            <xs:enumeration value="SET"/>
+            <xs:enumeration value="CLEAR"/>
+            <xs:enumeration value="BETWEEN"/>
+            <xs:enumeration value="AND"/>
+            <xs:enumeration value="OR"/>
+            <xs:enumeration value="XOR"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ResolutionStrategyEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FMR"/>
+            <xs:enumeration value="LMR"/>
+            <xs:enumeration value="PMR"/>
+            <xs:enumeration value="PMRE"/>
+            <xs:enumeration value="PMRN"/>
+            <xs:enumeration value="DTP"/>
+            <xs:enumeration value="ATP"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SupportedConditionOperatorEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="exactMatch"/>
+            <xs:enumeration value="union"/>
+            <xs:enumeration value="range"/>
+            <xs:enumeration value="rangeMask"/>
+            <xs:enumeration value="rangeCIDR"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PolicyAttributeEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="targetRuleSet"/>
+            <xs:enumeration value="ipSecAction"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SupportedActionOperatorEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="proposal"/>
+            <xs:enumeration value="exactMatch"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuleAttributeEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ruleType"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

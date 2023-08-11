@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="policy" type="Policy"/>
+    <xs:complexType name="Policy">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="rule" type="Rule"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="defaultActionCapabilitySpec" type="DefaultActionCapability"/>
+        </xs:sequence>
+        <xs:attribute name="nsfName" type="xs:string"/>
+        <xs:attribute name="targetRuleSet" type="xs:string"/>
+        <xs:attribute name="ipSecAction" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="DefaultActionCapabilitySpec">
+        <xs:complexContent>
+            <xs:extension base="DefaultActionCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpSourceAddressConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="IpSourceAddressCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpDestinationAddressConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="IpDestinationAddressCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SourcePortConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="SourcePortCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DestinationPortConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="DestinationPortCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpProtocolTypeConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="IpProtocolTypeCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AcceptActionCapability">
+        <xs:complexContent>
+            <xs:extension base="AcceptCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="RejectActionCapability">
+        <xs:complexContent>
+            <xs:extension base="RejectCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Rule">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="ruleDescription" type="xs:string"/>
+            <xs:element name="label" type="xs:string"/>
+            <xs:element name="externalData" type="ExternalData"/>
+            <xs:element name="defaultActionCapabilitySpec" type="DefaultActionCapabilitySpec"/>
+            <xs:element name="ipSourceAddressConditionCapability" type="IpSourceAddressConditionCapability"/>
+            <xs:element name="ipDestinationAddressConditionCapability" type="IpDestinationAddressConditionCapability"/>
+            <xs:element name="sourcePortConditionCapability" type="SourcePortConditionCapability"/>
+            <xs:element name="destinationPortConditionCapability" type="DestinationPortConditionCapability"/>
+            <xs:element name="ipProtocolTypeConditionCapability" type="IpProtocolTypeConditionCapability"/>
+            <xs:element name="acceptActionCapability" type="AcceptActionCapability"/>
+            <xs:element name="rejectActionCapability" type="RejectActionCapability"/>
+        </xs:choice>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="ruleType" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="ExternalData">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="NSF">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" minOccurs="0" name="languageModelGenerator" type="LanguageModelGenerator"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="nsfTranslatorAdapter" type="NSFTranslatorAdapter"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="metadata" type="Metadata"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="securityCapability" type="SecurityCapability"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="nsfPolicyDetails" type="NSFPolicyDetails"/>
+        </xs:choice>
+        <xs:attribute name="id" type="xs:ID"/>
+        <xs:attribute name="ref" type="xs:IDREF"/>
+    </xs:complexType>
+    <xs:complexType name="SecurityCapability">
+        <xs:complexContent>
+            <xs:extension base="NSF"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DefaultActionCapability">
+        <xs:complexContent>
+            <xs:extension base="SecurityCapability">
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element name="ipSourceAddressConditionCapability" type="IpSourceAddressConditionCapability"/>
+                    <xs:element name="ipDestinationAddressConditionCapability" type="IpDestinationAddressConditionCapability"/>
+                    <xs:element name="sourcePortConditionCapability" type="SourcePortConditionCapability"/>
+                    <xs:element name="destinationPortConditionCapability" type="DestinationPortConditionCapability"/>
+                    <xs:element name="ipProtocolTypeConditionCapability" type="IpProtocolTypeConditionCapability"/>
+                    <xs:element name="acceptActionCapability" type="AcceptActionCapability"/>
+                    <xs:element name="rejectActionCapability" type="RejectActionCapability"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ConditionCapability">
+        <xs:complexContent>
+            <xs:extension base="SecurityCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element maxOccurs="1" minOccurs="0" name="operation" type="OperationTypeEnumeration"/>
+                    <xs:element name="capabilityValue" type="OperatorType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="capabilityIpValue" type="IpOperatorType"/>
+                </xs:choice>
+                <xs:attribute name="operator" type="SupportedConditionOperatorEnumeration"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="L3Capability">
+        <xs:complexContent>
+            <xs:extension base="ConditionCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Ipv4Capability">
+        <xs:complexContent>
+            <xs:extension base="L3Capability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpAddressCapability">
+        <xs:complexContent>
+            <xs:extension base="Ipv4Capability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpSrcAddressCapability">
+        <xs:complexContent>
+            <xs:extension base="IpAddressCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpSourceAddressCapability">
+        <xs:complexContent>
+            <xs:extension base="IpSrcAddressCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="ipAddress" type="Ipv4MaskRangeOperatorType"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpDestAddressCapability">
+        <xs:complexContent>
+            <xs:extension base="IpAddressCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpDestinationAddressCapability">
+        <xs:complexContent>
+            <xs:extension base="IpDestAddressCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="ipAddress" type="Ipv4MaskRangeOperatorType"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="L4Capability">
+        <xs:complexContent>
+            <xs:extension base="ConditionCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="CommonL4Capability">
+        <xs:complexContent>
+            <xs:extension base="L4Capability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="PortCapability">
+        <xs:complexContent>
+            <xs:extension base="CommonL4Capability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SourcePortCapability">
+        <xs:complexContent>
+            <xs:extension base="PortCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="port" type="PortType"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DestinationPortCapability">
+        <xs:complexContent>
+            <xs:extension base="PortCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="port" type="PortType"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IpProtocolTypeCapability">
+        <xs:complexContent>
+            <xs:extension base="Ipv4Capability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element maxOccurs="1" minOccurs="0" name="protocolType" type="ProtocolType"/>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ActionCapability">
+        <xs:complexContent>
+            <xs:extension base="SecurityCapability">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element maxOccurs="1" minOccurs="0" name="operation" type="OperationTypeEnumeration"/>
+                    <xs:element name="capabilityValue" type="ActionOperatorType"/>
+                </xs:choice>
+                <xs:attribute name="operator" type="SupportedActionOperatorEnumeration"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AcceptCapability">
+        <xs:complexContent>
+            <xs:extension base="ActionCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="RejectCapability">
+        <xs:complexContent>
+            <xs:extension base="ActionCapability"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NSFTranslatorAdapter"/>
+    <xs:complexType name="LanguageModelGenerator"/>
+    <xs:complexType name="Metadata"/>
+    <xs:complexType name="NSFPolicyDetails">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" name="ruleStart" type="xs:string"/>
+            <xs:element maxOccurs="1" name="ruleEnd" type="xs:string"/>
+            <xs:element maxOccurs="1" name="policyTrailer" type="xs:string"/>
+            <xs:element maxOccurs="1" name="policyEncoding" type="xs:string"/>
+            <xs:element name="policyAttribute" type="PolicyAttributeType"/>
+            <xs:element maxOccurs="1" name="defaultSecurityCapability" type="xs:string"/>
+            <xs:element name="ruleAttribute" type="RuleAttributeType"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="ruleAttributeDetails" type="RuleAttributeDetailsType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="IpOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="range" type="RangeOperatorType"/>
+            <xs:element name="rangeMask" type="Ipv4MaskRangeOperatorType"/>
+            <xs:element name="rangeCIDR" type="Ipv4MaskCIDRRangeOperatorType"/>
+            <xs:element name="union" type="UnionOperatorType"/>
+            <xs:element default="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" maxOccurs="1" name="exactMatch" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ProtocolType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" minOccurs="0" name="protocolTypeName" type="ProtocolTypeEnumeration"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="OperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="range" type="RangeOperatorType"/>
+            <xs:element name="union" type="UnionOperatorType"/>
+            <xs:element maxOccurs="1" name="exactMatch" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="UnionOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="elementRange" type="ElementRangeType"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="elementValue" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="RangeOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" minOccurs="0" name="start" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="end" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ElementRangeType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="range" type="RangeOperatorType"/>
+            <xs:element name="rangeMask" type="Ipv4MaskRangeOperatorType"/>
+            <xs:element name="rangeCIDR" type="Ipv4MaskCIDRRangeOperatorType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="Ipv4MaskCIDRRangeOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element default="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" maxOccurs="1" name="address" type="xs:string"/>
+            <xs:element default="^([0-9]|[1-2][0-9]|3[0-2])?$" maxOccurs="1" minOccurs="0" name="maskCIDR" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="PortType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" name="startValue" type="xs:string"/>
+            <xs:element maxOccurs="1" name="endValue" type="xs:string"/>
+            <xs:element name="startName" type="ServicePortNameEnumeration"/>
+            <xs:element name="endName" type="ServicePortNameEnumeration"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="Ipv4MaskRangeOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element default="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" maxOccurs="1" name="address" type="xs:string"/>
+            <xs:element default="^(((255\.){3}(255|254|252|248|240|224|192|128|0+))|((255\.){2}(255|254|252|248|240|224|192|128|0+)\.0)|((255\.)(255|254|252|248|240|224|192|128|0+)(\.0+){2})|((255|254|252|248|240|224|192|128|0+)(\.0+){3}))$" maxOccurs="1" minOccurs="0" name="mask" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="PolicyAttributeType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="attributeName" type="PolicyAttributeEnumeration"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ActionOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="propList" type="ProposalOperatorType"/>
+            <xs:element maxOccurs="1" name="exactMatch" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ProposalOperatorType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="proposal" type="CipherSuitesType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="CipherSuitesType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" minOccurs="0" name="algoEnc" type="EncryptionAlgoEnumeration"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="mode" type="ModeForAEADEnumeration"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="algoHash" type="HashAlgorithmEnumeration"/>
+            <xs:element maxOccurs="1" minOccurs="0" name="dhgroup" type="DiffieHellmanEnumeration"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="RuleAttributeType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="attributeName" type="RuleAttributeEnumeration"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="RuleAttributeDetailsType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="mappingDetails" type="MappingDetailsType"/>
+        </xs:choice>
+        <xs:attribute name="ref" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="MappingDetailsType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element maxOccurs="1" name="key" type="xs:string"/>
+            <xs:element maxOccurs="1" name="value" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:simpleType name="ProtocolTypeEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HOPOPT"/>
+            <xs:enumeration value="ICMP"/>
+            <xs:enumeration value="IGMP"/>
+            <xs:enumeration value="GGP"/>
+            <xs:enumeration value="ST"/>
+            <xs:enumeration value="TCP"/>
+            <xs:enumeration value="EGP"/>
+            <xs:enumeration value="IGP"/>
+            <xs:enumeration value="PUP"/>
+            <xs:enumeration value="UDP"/>
+            <xs:enumeration value="HMP"/>
+            <xs:enumeration value="XNS-IDP"/>
+            <xs:enumeration value="RDP"/>
+            <xs:enumeration value="ISO-TP4"/>
+            <xs:enumeration value="DCCP"/>
+            <xs:enumeration value="XTP"/>
+            <xs:enumeration value="DDP"/>
+            <xs:enumeration value="IDPR-CMTP"/>
+            <xs:enumeration value="IPv6"/>
+            <xs:enumeration value="IPv6-Route"/>
+            <xs:enumeration value="IPv6-Frag"/>
+            <xs:enumeration value="IDRP"/>
+            <xs:enumeration value="RSVP"/>
+            <xs:enumeration value="GRE"/>
+            <xs:enumeration value="SKIP"/>
+            <xs:enumeration value="IPv6-ICMP"/>
+            <xs:enumeration value="IPv6-NoNxt"/>
+            <xs:enumeration value="IPv6-Opts"/>
+            <xs:enumeration value="CPHB"/>
+            <xs:enumeration value="VMTP"/>
+            <xs:enumeration value="EIGRP"/>
+            <xs:enumeration value="AX.25"/>
+            <xs:enumeration value="ETHERIP"/>
+            <xs:enumeration value="ENCAP"/>
+            <xs:enumeration value="PIM"/>
+            <xs:enumeration value="VRRP"/>
+            <xs:enumeration value="L2TP"/>
+            <xs:enumeration value="SCTP"/>
+            <xs:enumeration value="FC"/>
+            <xs:enumeration value="UDPLite"/>
+            <xs:enumeration value="MPLS-in-IP"/>
+            <xs:enumeration value="HIP"/>
+            <xs:enumeration value="Shim6"/>
+            <xs:enumeration value="WESP"/>
+            <xs:enumeration value="ROHC"/>
+            <xs:enumeration value="hopopt"/>
+            <xs:enumeration value="icmp"/>
+            <xs:enumeration value="igmp"/>
+            <xs:enumeration value="ggp"/>
+            <xs:enumeration value="ip-encap"/>
+            <xs:enumeration value="st"/>
+            <xs:enumeration value="tcp"/>
+            <xs:enumeration value="egp"/>
+            <xs:enumeration value="igp"/>
+            <xs:enumeration value="pup"/>
+            <xs:enumeration value="udp"/>
+            <xs:enumeration value="hmp"/>
+            <xs:enumeration value="xns-idp"/>
+            <xs:enumeration value="rdp"/>
+            <xs:enumeration value="iso-tp4"/>
+            <xs:enumeration value="dccp"/>
+            <xs:enumeration value="xtp"/>
+            <xs:enumeration value="ddp"/>
+            <xs:enumeration value="idpr-cmtp"/>
+            <xs:enumeration value="ipv6"/>
+            <xs:enumeration value="ipv6-route"/>
+            <xs:enumeration value="ipv6-frag"/>
+            <xs:enumeration value="idrp"/>
+            <xs:enumeration value="rsvp"/>
+            <xs:enumeration value="gre"/>
+            <xs:enumeration value="ipsec-esp"/>
+            <xs:enumeration value="ipsec-ah"/>
+            <xs:enumeration value="skip"/>
+            <xs:enumeration value="ipv6-icmp"/>
+            <xs:enumeration value="ipv6-nonxt"/>
+            <xs:enumeration value="ipv6-opts"/>
+            <xs:enumeration value="rspf"/>
+            <xs:enumeration value="cphb"/>
+            <xs:enumeration value="vmtp"/>
+            <xs:enumeration value="eigrp"/>
+            <xs:enumeration value="ospfigp"/>
+            <xs:enumeration value="ax.25"/>
+            <xs:enumeration value="ipip"/>
+            <xs:enumeration value="etherip"/>
+            <xs:enumeration value="encap"/>
+            <xs:enumeration value="pim"/>
+            <xs:enumeration value="ipcomp"/>
+            <xs:enumeration value="vrrp"/>
+            <xs:enumeration value="l2tp"/>
+            <xs:enumeration value="isis"/>
+            <xs:enumeration value="sctp"/>
+            <xs:enumeration value="fc"/>
+            <xs:enumeration value="mh"/>
+            <xs:enumeration value="MH"/>
+            <xs:enumeration value="udplite"/>
+            <xs:enumeration value="mpls-in-ip"/>
+            <xs:enumeration value="hip"/>
+            <xs:enumeration value="shim6"/>
+            <xs:enumeration value="wesp"/>
+            <xs:enumeration value="rohc"/>
+            <xs:enumeration value="esp"/>
+            <xs:enumeration value="ah"/>
+            <xs:enumeration value="comp"/>
+            <xs:enumeration value="IP-ENCAP"/>
+            <xs:enumeration value="IPSEC-ESP"/>
+            <xs:enumeration value="IPSEC-AH"/>
+            <xs:enumeration value="RSPF"/>
+            <xs:enumeration value="OSPFIGP"/>
+            <xs:enumeration value="IPIP"/>
+            <xs:enumeration value="IPCOMP"/>
+            <xs:enumeration value="ISIS"/>
+            <xs:enumeration value="Mobility-Header"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CpuConditionCapabilityIntegerRestriction">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="7"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="DiffieHellmanEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="modp2048"/>
+            <xs:enumeration value="modp3072"/>
+            <xs:enumeration value="modp4096"/>
+            <xs:enumeration value="modp6144"/>
+            <xs:enumeration value="modp8192"/>
+            <xs:enumeration value="ecp224"/>
+            <xs:enumeration value="ecp256"/>
+            <xs:enumeration value="ecp384"/>
+            <xs:enumeration value="ecp521"/>
+            <xs:enumeration value="ecp224bp"/>
+            <xs:enumeration value="ecp256bp"/>
+            <xs:enumeration value="ecp384bp"/>
+            <xs:enumeration value="ecp512bp"/>
+            <xs:enumeration value="curve25519"/>
+            <xs:enumeration value="x25519"/>
+            <xs:enumeration value="curve448"/>
+            <xs:enumeration value="x448"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="EncryptionAlgoEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="aes128"/>
+            <xs:enumeration value="aes192"/>
+            <xs:enumeration value="aes256"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="HashAlgorithmEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="sha1"/>
+            <xs:enumeration value="sha256"/>
+            <xs:enumeration value="sha384"/>
+            <xs:enumeration value="sha512"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ModeForAEADEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ccm8"/>
+            <xs:enumeration value="ccm12"/>
+            <xs:enumeration value="ccm16"/>
+            <xs:enumeration value="ccm64"/>
+            <xs:enumeration value="ccm96"/>
+            <xs:enumeration value="ccm128"/>
+            <xs:enumeration value="gcm8"/>
+            <xs:enumeration value="gcm12"/>
+            <xs:enumeration value="gcm16"/>
+            <xs:enumeration value="gcm64"/>
+            <xs:enumeration value="gcm96"/>
+            <xs:enumeration value="gcm128"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="OperationTypeEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="UNKNOWN"/>
+            <xs:enumeration value="GREATER_THAN"/>
+            <xs:enumeration value="GREATER_THAN_OR_EQUAL_TO"/>
+            <xs:enumeration value="LESS_THAN"/>
+            <xs:enumeration value="LESS_THAN_OR_EQUAL_TO"/>
+            <xs:enumeration value="EQUAL_TO"/>
+            <xs:enumeration value="NOT_EQUAL_TO"/>
+            <xs:enumeration value="IN"/>
+            <xs:enumeration value="NOT_IN"/>
+            <xs:enumeration value="SET"/>
+            <xs:enumeration value="CLEAR"/>
+            <xs:enumeration value="BETWEEN"/>
+            <xs:enumeration value="AND"/>
+            <xs:enumeration value="OR"/>
+            <xs:enumeration value="XOR"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SupportedConditionOperatorEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="exactMatch"/>
+            <xs:enumeration value="union"/>
+            <xs:enumeration value="range"/>
+            <xs:enumeration value="rangeMask"/>
+            <xs:enumeration value="rangeCIDR"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PolicyAttributeEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="targetRuleSet"/>
+            <xs:enumeration value="ipSecAction"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SupportedActionOperatorEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="proposal"/>
+            <xs:enumeration value="exactMatch"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuleAttributeEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ruleType"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ServicePortNameEnumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="tcpmux"/>
+            <xs:enumeration value="discard"/>
+            <xs:enumeration value="systat"/>
+            <xs:enumeration value="daytime"/>
+            <xs:enumeration value="netstat"/>
+            <xs:enumeration value="qotd"/>
+            <xs:enumeration value="msp"/>
+            <xs:enumeration value="chargen"/>
+            <xs:enumeration value="ftp-data"/>
+            <xs:enumeration value="ftp"/>
+            <xs:enumeration value="ssh"/>
+            <xs:enumeration value="telnet"/>
+            <xs:enumeration value="smtp"/>
+            <xs:enumeration value="time"/>
+            <xs:enumeration value="rlp"/>
+            <xs:enumeration value="nameserver"/>
+            <xs:enumeration value="whois"/>
+            <xs:enumeration value="tacacs"/>
+            <xs:enumeration value="re-mail-ck"/>
+            <xs:enumeration value="domain"/>
+            <xs:enumeration value="tacacs-ds"/>
+            <xs:enumeration value="bootps"/>
+            <xs:enumeration value="bootpc"/>
+            <xs:enumeration value="tftp"/>
+            <xs:enumeration value="gopher"/>
+            <xs:enumeration value="finger"/>
+            <xs:enumeration value="http"/>
+            <xs:enumeration value="link"/>
+            <xs:enumeration value="kerberos"/>
+            <xs:enumeration value="supdup"/>
+            <xs:enumeration value="hostnames"/>
+            <xs:enumeration value="iso-tsap"/>
+            <xs:enumeration value="acr-nema"/>
+            <xs:enumeration value="csnet-ns"/>
+            <xs:enumeration value="rtelnet"/>
+            <xs:enumeration value="pop3"/>
+            <xs:enumeration value="sunrpc"/>
+            <xs:enumeration value="auth"/>
+            <xs:enumeration value="sftp"/>
+            <xs:enumeration value="nntp"/>
+            <xs:enumeration value="ntp"/>
+            <xs:enumeration value="pwdgen"/>
+            <xs:enumeration value="loc-srv"/>
+            <xs:enumeration value="netbios-ns"/>
+            <xs:enumeration value="netbios-dgm"/>
+            <xs:enumeration value="netbios-ssn"/>
+            <xs:enumeration value="imap2"/>
+            <xs:enumeration value="snmp"/>
+            <xs:enumeration value="snmp-trap"/>
+            <xs:enumeration value="cmip-man"/>
+            <xs:enumeration value="cmip-agent"/>
+            <xs:enumeration value="mailq"/>
+            <xs:enumeration value="xdmcp"/>
+            <xs:enumeration value="nextstep"/>
+            <xs:enumeration value="bgp"/>
+            <xs:enumeration value="irc"/>
+            <xs:enumeration value="smux"/>
+            <xs:enumeration value="at-rtmp"/>
+            <xs:enumeration value="at-nbp"/>
+            <xs:enumeration value="at-echo"/>
+            <xs:enumeration value="at-zis"/>
+            <xs:enumeration value="qmtp"/>
+            <xs:enumeration value="z3950"/>
+            <xs:enumeration value="ipx"/>
+            <xs:enumeration value="pawserv"/>
+            <xs:enumeration value="zserv"/>
+            <xs:enumeration value="fatserv"/>
+            <xs:enumeration value="rpc2portmap"/>
+            <xs:enumeration value="codaauth2"/>
+            <xs:enumeration value="clearcase"/>
+            <xs:enumeration value="ulistserv"/>
+            <xs:enumeration value="ldap"/>
+            <xs:enumeration value="imsp"/>
+            <xs:enumeration value="svrloc"/>
+            <xs:enumeration value="https"/>
+            <xs:enumeration value="snpp"/>
+            <xs:enumeration value="microsoft-ds"/>
+            <xs:enumeration value="kpasswd"/>
+            <xs:enumeration value="urd"/>
+            <xs:enumeration value="saft"/>
+            <xs:enumeration value="isakmp"/>
+            <xs:enumeration value="rtsp"/>
+            <xs:enumeration value="nqs"/>
+            <xs:enumeration value="npmp-local"/>
+            <xs:enumeration value="npmp-gui"/>
+            <xs:enumeration value="hmmp-ind"/>
+            <xs:enumeration value="asf-rmcp"/>
+            <xs:enumeration value="qmqp"/>
+            <xs:enumeration value="ipp"/>
+            <xs:enumeration value="exec"/>
+            <xs:enumeration value="login"/>
+            <xs:enumeration value="shell"/>
+            <xs:enumeration value="printer"/>
+            <xs:enumeration value="talk"/>
+            <xs:enumeration value="ntalk"/>
+            <xs:enumeration value="route"/>
+            <xs:enumeration value="timed"/>
+            <xs:enumeration value="tempo"/>
+            <xs:enumeration value="courier"/>
+            <xs:enumeration value="conference"/>
+            <xs:enumeration value="netnews"/>
+            <xs:enumeration value="netwall"/>
+            <xs:enumeration value="gdomap"/>
+            <xs:enumeration value="uucp"/>
+            <xs:enumeration value="klogin"/>
+            <xs:enumeration value="kshell"/>
+            <xs:enumeration value="dhcpv6-client"/>
+            <xs:enumeration value="dhcpv6-server"/>
+            <xs:enumeration value="afpovertcp"/>
+            <xs:enumeration value="idfp"/>
+            <xs:enumeration value="remotefs"/>
+            <xs:enumeration value="nntps"/>
+            <xs:enumeration value="submission"/>
+            <xs:enumeration value="ldaps"/>
+            <xs:enumeration value="tinc"/>
+            <xs:enumeration value="silc"/>
+            <xs:enumeration value="kerberos-adm"/>
+            <xs:enumeration value="webster"/>
+            <xs:enumeration value="rsync"/>
+            <xs:enumeration value="ftps-data"/>
+            <xs:enumeration value="ftps"/>
+            <xs:enumeration value="telnets"/>
+            <xs:enumeration value="imaps"/>
+            <xs:enumeration value="pop3s"/>
+            <xs:enumeration value="socks"/>
+            <xs:enumeration value="proofd"/>
+            <xs:enumeration value="rootd"/>
+            <xs:enumeration value="openvpn"/>
+            <xs:enumeration value="rmiregistry"/>
+            <xs:enumeration value="kazaa"/>
+            <xs:enumeration value="nessus"/>
+            <xs:enumeration value="lotusnote"/>
+            <xs:enumeration value="ms-sql-s"/>
+            <xs:enumeration value="ms-sql-m"/>
+            <xs:enumeration value="ingreslock"/>
+            <xs:enumeration value="datametrics"/>
+            <xs:enumeration value="sa-msg-port"/>
+            <xs:enumeration value="kermit"/>
+            <xs:enumeration value="groupwise"/>
+            <xs:enumeration value="l2f"/>
+            <xs:enumeration value="radius"/>
+            <xs:enumeration value="radius-acct"/>
+            <xs:enumeration value="msnp"/>
+            <xs:enumeration value="unix-status"/>
+            <xs:enumeration value="log-server"/>
+            <xs:enumeration value="remoteping"/>
+            <xs:enumeration value="cisco-sccp"/>
+            <xs:enumeration value="search"/>
+            <xs:enumeration value="nfs"/>
+            <xs:enumeration value="gnunet"/>
+            <xs:enumeration value="rtcm-sc104"/>
+            <xs:enumeration value="gsigatekeeper"/>
+            <xs:enumeration value="gris"/>
+            <xs:enumeration value="cvspserver"/>
+            <xs:enumeration value="venus"/>
+            <xs:enumeration value="venus-se"/>
+            <xs:enumeration value="codasrv"/>
+            <xs:enumeration value="codasrv-se"/>
+            <xs:enumeration value="mon"/>
+            <xs:enumeration value="dict"/>
+            <xs:enumeration value="f5-globalsite"/>
+            <xs:enumeration value="gsiftp"/>
+            <xs:enumeration value="gpsd"/>
+            <xs:enumeration value="gds-db"/>
+            <xs:enumeration value="icpv2"/>
+            <xs:enumeration value="isns"/>
+            <xs:enumeration value="iscsi-target"/>
+            <xs:enumeration value="mysql"/>
+            <xs:enumeration value="nut"/>
+            <xs:enumeration value="distcc"/>
+            <xs:enumeration value="daap"/>
+            <xs:enumeration value="svn"/>
+            <xs:enumeration value="suucp"/>
+            <xs:enumeration value="sysrqd"/>
+            <xs:enumeration value="sieve"/>
+            <xs:enumeration value="epmd"/>
+            <xs:enumeration value="remctl"/>
+            <xs:enumeration value="f5-iquery"/>
+            <xs:enumeration value="ipsec-nat-t"/>
+            <xs:enumeration value="iax"/>
+            <xs:enumeration value="mtn"/>
+            <xs:enumeration value="radmin-port"/>
+            <xs:enumeration value="rfe"/>
+            <xs:enumeration value="mmcc"/>
+            <xs:enumeration value="sip"/>
+            <xs:enumeration value="sip-tls"/>
+            <xs:enumeration value="aol"/>
+            <xs:enumeration value="xmpp-client"/>
+            <xs:enumeration value="xmpp-server"/>
+            <xs:enumeration value="cfengine"/>
+            <xs:enumeration value="mdns"/>
+            <xs:enumeration value="postgresql"/>
+            <xs:enumeration value="freeciv"/>
+            <xs:enumeration value="amqps"/>
+            <xs:enumeration value="amqp"/>
+            <xs:enumeration value="ggz"/>
+            <xs:enumeration value="x11"/>
+            <xs:enumeration value="x11-1"/>
+            <xs:enumeration value="x11-2"/>
+            <xs:enumeration value="x11-3"/>
+            <xs:enumeration value="x11-4"/>
+            <xs:enumeration value="x11-5"/>
+            <xs:enumeration value="x11-6"/>
+            <xs:enumeration value="x11-7"/>
+            <xs:enumeration value="gnutella-svc"/>
+            <xs:enumeration value="gnutella-rtr"/>
+            <xs:enumeration value="sge-qmaster"/>
+            <xs:enumeration value="sge-execd"/>
+            <xs:enumeration value="mysql-proxy"/>
+            <xs:enumeration value="babel"/>
+            <xs:enumeration value="ircs-u"/>
+            <xs:enumeration value="afs3-fileserver"/>
+            <xs:enumeration value="afs3-callback"/>
+            <xs:enumeration value="afs3-prserver"/>
+            <xs:enumeration value="afs3-vlserver"/>
+            <xs:enumeration value="afs3-kaserver"/>
+            <xs:enumeration value="afs3-volser"/>
+            <xs:enumeration value="afs3-errors"/>
+            <xs:enumeration value="afs3-bos"/>
+            <xs:enumeration value="afs3-update"/>
+            <xs:enumeration value="afs3-rmtsys"/>
+            <xs:enumeration value="font-service"/>
+            <xs:enumeration value="http-alt"/>
+            <xs:enumeration value="puppet"/>
+            <xs:enumeration value="bacula-dir"/>
+            <xs:enumeration value="bacula-fd"/>
+            <xs:enumeration value="bacula-sd"/>
+            <xs:enumeration value="xmms2"/>
+            <xs:enumeration value="nbd"/>
+            <xs:enumeration value="zabbix-agent"/>
+            <xs:enumeration value="zabbix-trapper"/>
+            <xs:enumeration value="amanda"/>
+            <xs:enumeration value="dicom"/>
+            <xs:enumeration value="hkp"/>
+            <xs:enumeration value="bprd"/>
+            <xs:enumeration value="bpdbm"/>
+            <xs:enumeration value="bpjava-msvc"/>
+            <xs:enumeration value="vnetd"/>
+            <xs:enumeration value="bpcd"/>
+            <xs:enumeration value="vopied"/>
+            <xs:enumeration value="db-lsp"/>
+            <xs:enumeration value="dcap"/>
+            <xs:enumeration value="gsidcap"/>
+            <xs:enumeration value="wnn6"/>
+            <xs:enumeration value="nbp"/>
+            <xs:enumeration value="echo"/>
+            <xs:enumeration value="zip"/>
+            <xs:enumeration value="kerberos4"/>
+            <xs:enumeration value="kerberos-master"/>
+            <xs:enumeration value="passwd-server"/>
+            <xs:enumeration value="krb-prop"/>
+            <xs:enumeration value="krbupdate"/>
+            <xs:enumeration value="swat"/>
+            <xs:enumeration value="kpop"/>
+            <xs:enumeration value="knetd"/>
+            <xs:enumeration value="zephyr-srv"/>
+            <xs:enumeration value="zephyr-clt"/>
+            <xs:enumeration value="zephyr-hm"/>
+            <xs:enumeration value="eklogin"/>
+            <xs:enumeration value="kx"/>
+            <xs:enumeration value="iprop"/>
+            <xs:enumeration value="supfilesrv"/>
+            <xs:enumeration value="supfiledbg"/>
+            <xs:enumeration value="linuxconf"/>
+            <xs:enumeration value="poppassd"/>
+            <xs:enumeration value="moira-db"/>
+            <xs:enumeration value="moira-update"/>
+            <xs:enumeration value="moira-ureg"/>
+            <xs:enumeration value="spamd"/>
+            <xs:enumeration value="omirr"/>
+            <xs:enumeration value="customs"/>
+            <xs:enumeration value="skkserv"/>
+            <xs:enumeration value="predict"/>
+            <xs:enumeration value="rmtcfg"/>
+            <xs:enumeration value="wipld"/>
+            <xs:enumeration value="xtel"/>
+            <xs:enumeration value="xtelw"/>
+            <xs:enumeration value="support"/>
+            <xs:enumeration value="cfinger"/>
+            <xs:enumeration value="ninstall"/>
+            <xs:enumeration value="zebrasrv"/>
+            <xs:enumeration value="zebra"/>
+            <xs:enumeration value="ripd"/>
+            <xs:enumeration value="ripngd"/>
+            <xs:enumeration value="ospfd"/>
+            <xs:enumeration value="bgpd"/>
+            <xs:enumeration value="ospf6d"/>
+            <xs:enumeration value="ospfapi"/>
+            <xs:enumeration value="isisd"/>
+            <xs:enumeration value="afbackup"/>
+            <xs:enumeration value="afmbackup"/>
+            <xs:enumeration value="xtell"/>
+            <xs:enumeration value="fax"/>
+            <xs:enumeration value="hylafax"/>
+            <xs:enumeration value="distmp3"/>
+            <xs:enumeration value="munin"/>
+            <xs:enumeration value="enbd-cstatd"/>
+            <xs:enumeration value="enbd-sstatd"/>
+            <xs:enumeration value="pcrd"/>
+            <xs:enumeration value="noclog"/>
+            <xs:enumeration value="hostmon"/>
+            <xs:enumeration value="rplay"/>
+            <xs:enumeration value="nrpe"/>
+            <xs:enumeration value="nsca"/>
+            <xs:enumeration value="mrtd"/>
+            <xs:enumeration value="bgpsim"/>
+            <xs:enumeration value="canna"/>
+            <xs:enumeration value="syslog-tls"/>
+            <xs:enumeration value="sane-port"/>
+            <xs:enumeration value="ircd"/>
+            <xs:enumeration value="zope-ftp"/>
+            <xs:enumeration value="tproxy"/>
+            <xs:enumeration value="omniorb"/>
+            <xs:enumeration value="clc-build-daemon"/>
+            <xs:enumeration value="xinetd"/>
+            <xs:enumeration value="mandelspawn"/>
+            <xs:enumeration value="git"/>
+            <xs:enumeration value="zope"/>
+            <xs:enumeration value="webmin"/>
+            <xs:enumeration value="kamanda"/>
+            <xs:enumeration value="amandaidx"/>
+            <xs:enumeration value="amidxtape"/>
+            <xs:enumeration value="smsqp"/>
+            <xs:enumeration value="xpilot"/>
+            <xs:enumeration value="sgi-cmsd"/>
+            <xs:enumeration value="sgi-crsd"/>
+            <xs:enumeration value="sgi-gcd"/>
+            <xs:enumeration value="sgi-cad"/>
+            <xs:enumeration value="isdnlog"/>
+            <xs:enumeration value="vboxd"/>
+            <xs:enumeration value="binkp"/>
+            <xs:enumeration value="asp"/>
+            <xs:enumeration value="csync2"/>
+            <xs:enumeration value="dircproxy"/>
+            <xs:enumeration value="tfido"/>
+            <xs:enumeration value="fido"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

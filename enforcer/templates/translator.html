@@ -1,0 +1,24 @@
+<!doctype html>
+<title>Upload Rule Instance</title>
+<h2>Upload Rule Instance (.xml)</h2>
+<div style="display: flex;">
+    <form method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        <input name="upload" type=submit value=Upload>
+    </form>
+    <form method="post">
+        <input name="destnsf" type="text" placeholder="Destination NSF(optional)">
+        <input name="translate" type=submit value="Translate Rule Instance">
+    </form>
+    <form method="post">
+        <input name="home" type=submit value="Home">
+    </form>
+</div>
+
+<body>
+    {% for mesg in get_flashed_messages() %}
+    {% autoescape false %}
+    <h3>{{ mesg }}</h3>
+    {% endautoescape %}
+    {% endfor %}
+</body>

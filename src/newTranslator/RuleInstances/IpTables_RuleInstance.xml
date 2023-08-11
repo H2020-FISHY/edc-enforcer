@@ -1,0 +1,284 @@
+<policy nsfName="IpTables" targetRuleSet="INPUT" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="language_ipTables.xsd">
+
+
+	<!-- iptables -A OUTPUT -i eth0 -p TCP -s 192.168.1.0 -j DROP  -->
+	<!--
+		Security Capabilities use new operators
+     -->
+	<rule id="0">
+		<externalData type="priority">1</externalData>
+		<appendRuleActionCapability>
+			<chain>OUTPUT</chain>
+		</appendRuleActionCapability>
+		<inputInterfaceActionCapability>
+			<inFa>eth0</inFa>
+		</inputInterfaceActionCapability>
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>TCP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<ipSourceAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>192.168.1.0</exactMatch>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<!-- iptables -A INPUT -p TCP -s 203.0.113.0/24 -j DROP  -->
+	<!-- 
+		ipSourceAddressConditionCapability uses rangeCIDR operator 
+			Remove from NSFCatalogue rangeCIDR or rangeCIDR and rangeMask to see expansion methods 
+	 -->
+	<rule id="1">
+		<externalData type="priority">4</externalData>
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>TCP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<ipSourceAddressConditionCapability operator="rangeCIDR">
+			<capabilityIpValue>
+				<rangeCIDR>
+					<address>203.0.113.0</address>
+					<maskCIDR>24</maskCIDR>
+				</rangeCIDR>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<!-- iptables -A INPUT -p TCP -s 192.168.1.0/255.255.255.0 -j DROP  -->
+	<!-- 
+		ipSourceAddressConditionCapability uses rangeMask operator 
+			Remove from NSFCatalogue rangeMask or rangeCIDR to see expansion methods 
+	 -->
+	<rule id="2">
+		<externalData type="priority">3</externalData>
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>TCP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<ipSourceAddressConditionCapability operator="rangeMask">
+			<capabilityIpValue>
+				<rangeMask>
+					<address>192.168.1.0</address>
+					<mask>255.255.255.0</mask>
+				</rangeMask>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<!-- iptables -A INPUT -p TCP -m iprange - -src-range 192.168.1.0-192.168.1.6 -j DROP   -->
+	<!-- 
+		ipSourceAddressConditionCapability uses range operator 
+			Remove from NSFCatalogue range to see expansion methods 
+	 -->
+	<rule id="3">
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>TCP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<ipSourceAddressConditionCapability operator="range">
+			<capabilityIpValue>
+				<range>
+					<start>192.168.1.0</start>
+					<end>192.168.1.6</end>
+				</range>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<!-- iptables -A INPUT -p TCP -s 192.168.1.1,192.168.1.2,192.168.1.0/255.255.255.0,192.168.1.0/24 -j DROP   -->
+	<!-- 
+		ipSourceAddressConditionCapability uses union operator 
+			Remove from NSFCatalogue union to see expansion methods 
+	 -->
+	<rule id="4">
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>TCP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<ipSourceAddressConditionCapability operator="union">
+			<capabilityIpValue>
+				<union>
+					<elementValue>192.168.1.1</elementValue>
+					<elementValue>192.168.1.2</elementValue>
+					<elementRange>
+						<rangeMask>
+							<address>192.168.1.0</address>
+							<mask>255.255.255.0</mask>
+						</rangeMask>
+					</elementRange>
+					<elementRange>
+						<rangeCIDR>
+							<address>192.168.1.0</address>
+							<maskCIDR>24</maskCIDR>
+						</rangeCIDR>
+					</elementRange>
+				</union>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<rejectActionCapability/>
+	</rule>
+
+	<!-- iptables -A OUTPUT -p TCP ! - -dport 80 -m conntrack - -ctstate NEW,ESTABLISHED -j ACCEPT -->
+	<!-- 
+		destinationPortConditionCapability uses exactMatch operator
+		connTrackStateConditionCapability uses union operator
+			Remove from NSFCatalogue union to see expansion methods 
+	 -->
+	<rule id="5">
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>TCP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<destinationPortConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>80</exactMatch>
+			</capabilityValue>
+			<operation>NOT_EQUAL_TO</operation>
+		</destinationPortConditionCapability>
+		<matchActionCapability>
+			<match>conntrack</match>
+		</matchActionCapability>
+		<connTrackStateConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>NEW</elementValue>
+					<elementValue>ESTABLISHED</elementValue>
+				</union>
+			</capabilityValue>
+		</connTrackStateConditionCapability>
+		<acceptActionCapability/>
+	</rule>
+
+	<!--
+		iptables -A INPUT -p TCP -m multiport - -dports 10,20,30 -m conntrack - -ctstate NEW,ESTABLISHED -j ACCEPT
+		iptables -A INPUT -p UDP -m multiport - -dports 10,20,30 -m conntrack - -ctstate NEW,ESTABLISHED -j ACCEPT
+	-->
+	<!-- 
+		ipProtocolTypeConditionCapability uses union operator
+		destinationPortConditionCapability uses union operator
+			Remove from NSFCatalogue union to see expansion methods 
+		connTrackStateConditionCapability uses union operator
+			Remove from NSFCatalogue union to see expansion methods 
+	 -->
+	<rule id="6">
+		<ipProtocolTypeConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>TCP</elementValue>
+					<elementValue>UDP</elementValue>
+				</union>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<destinationPortConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>10</elementValue>
+					<elementValue>20</elementValue>
+					<elementValue>30</elementValue>
+				</union>
+			</capabilityValue>
+		</destinationPortConditionCapability>
+		<matchActionCapability>
+			<match>conntrack</match>
+		</matchActionCapability>
+		<connTrackStateConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>NEW</elementValue>
+					<elementValue>ESTABLISHED</elementValue>
+				</union>
+			</capabilityValue>
+		</connTrackStateConditionCapability>
+		<acceptActionCapability/>
+	</rule>
+
+	<!-- iptables -A INPUT -p TCP -m multiport - -dports 10:20 -m conntrack - -ctstate NEW,ESTABLISHED -j ACCEPT -->
+	<!-- 
+		destinationPortConditionCapability uses range operator
+			Remove from NSFCatalogue range or union to see expansion methods 
+		connTrackStateConditionCapability uses union operator
+			Remove from NSFCatalogue range or union to see expansion methods 
+	 -->
+	<rule id="7">
+		<externalData type="priority">2</externalData>
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>TCP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<destinationPortConditionCapability operator="range">
+			<operation>NOT_EQUAL_TO</operation>
+			<capabilityValue>
+				<range>
+					<start>10</start>
+					<end>20</end>
+				</range>
+			</capabilityValue>
+		</destinationPortConditionCapability>
+		<matchActionCapability>
+			<match>conntrack</match>
+		</matchActionCapability>
+		<connTrackStateConditionCapability operator="union">
+			<capabilityValue>
+				<union>
+					<elementValue>NEW</elementValue>
+					<elementValue>ESTABLISHED</elementValue>
+				</union>
+			</capabilityValue>
+		</connTrackStateConditionCapability>
+		<acceptActionCapability/>
+	</rule>
+
+	<!-- iptables -A INPUT -p TCP - -sport 3128 -s 10.0.0.1 -m connbytes - -connbytes 504857:504860 -->
+	<!-- 
+		connbytesConditionCapability uses range operator
+		Example of range operator introduced thanks to automated script (see NSFCatalogueComments.xml)
+	-->
+	<rule id="8">
+		<ipProtocolTypeConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>TCP</exactMatch>
+			</capabilityValue>
+		</ipProtocolTypeConditionCapability>
+		<sourcePortConditionCapability operator="exactMatch">
+			<capabilityValue>
+				<exactMatch>3128</exactMatch>
+			</capabilityValue>
+		</sourcePortConditionCapability>
+		<ipSourceAddressConditionCapability operator="exactMatch">
+			<capabilityIpValue>
+				<exactMatch>10.0.0.1</exactMatch>
+			</capabilityIpValue>
+		</ipSourceAddressConditionCapability>
+		<matchActionCapability>
+			<match>connbytes</match>
+		</matchActionCapability>
+		<connbytesConditionCapability operator="range">
+			<capabilityValue>
+				<range>
+					<start>504857</start>
+					<end>504860</end>
+				</range>
+			</capabilityValue>
+		</connbytesConditionCapability>
+	</rule>
+
+	<!-- iptables -P INPUT DROP -->
+	<!-- DefaultAction example -->
+	<defaultActionCapabilitySpec>
+		<acceptActionCapability/>
+	</defaultActionCapabilitySpec>
+
+</policy>
+    
